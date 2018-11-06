@@ -202,6 +202,12 @@ async function drawPostDetail(postId) {
       deleteEl.classList.remove('hidden');
     }
     // 5. 이벤트 리스너 등록하기
+    deleteEl.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await api.delete('/comments/' + commentItem.id);
+
+      await drawPostDetail(postId);
+    });
     // 6. 템플릿을 문서에 삽입
     // commentListEl.textContent = '';
     commentListEl.appendChild(frag);
