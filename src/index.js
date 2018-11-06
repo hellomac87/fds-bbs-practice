@@ -117,6 +117,7 @@ async function drawPostDetail(postId) {
   const bodyEl = frag.querySelector('.body');
   const backButtonEl = frag.querySelector('.back');
   const commentListEl = frag.querySelector('.comment-list');
+  const commentFormEl = frag.querySelector('.comment-form');
 
   // 3. 필요한 데이터 불러오기
   const { data : {title, body, user, comments} } = await api.get('/posts/' + postId, {
@@ -175,6 +176,18 @@ async function drawPostDetail(postId) {
   // 뒤로가기 버튼 이벤트 리스너
   backButtonEl.addEventListener('click', (e) => {
     drawPostList();
+  });
+
+  // 코멘트 폼 이벤트 리스너
+  commentFormEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const body = e.target.elements.body.value;
+    await api.post(`/posts/${postId}/comments`,{
+      body
+    });
+
+    drawPostDetail(postId);
   });
 
   // 6. 템플릿을 문서에 삽입
