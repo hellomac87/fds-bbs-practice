@@ -1,6 +1,7 @@
-$main-color: skyblue;
+$main-color: #23292d;
 
 body {
+  color:#fff;
   background-color: $main-color;
   &.loading::after {
     display: block;

@@ -1,10 +1,13 @@
 import '@babel/polyfill'
-
+// https://breezy-football.glitch.me/
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: process.env.API_URL
-})
+  // 바깥에서 주입해준 환경변수를 사용하는 코드
+  // 이 컴퓨터에서만 사용할 환경변수를 설정하기 위해서 .env 파일을 편집하면 된다.
+  baseURL: process.env.API_URL.toString()
+});
+console.log(process.env.API_URL);
 
 api.interceptors.request.use(function (config) {
   const token = localStorage.getItem('token')
@@ -68,8 +71,35 @@ async function drawPostList() {
   const frag = document.importNode(templates.postList, true)
 
   // 2. 요소 선택
+  const listEl = frag.querySelector('.post-list');
   // 3. 필요한 데이터 불러오기
+  const {data: postList} = await api.get('/posts/?_expand=user');
+  // 응답 객체의 data 변수를 postList 변수에 저장
+  // const res = await api.get('/posts/?_expand=user');
+  // const post = res.data
+  console.log(postList);
   // 4. 내용 채우기
+  for(const post of postList){
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.postItem, true);
+    // 2. 요소 선택
+    const idEl = frag.querySelector('.id');
+    const titleEl = frag.querySelector('.title');
+    const authorEl = frag.querySelector('.author');
+
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    idEl.textContent = post.id;
+    titleEl.textContent = post.title;
+    authorEl.textContent = post.user.username;
+
+    // 5. 이벤트 리스너 등록하기
+    titleEl.addEventListener('click', (e) => {
+      drawPostDetail(post.id);
+    });
+    // 6. 템플릿을 문서에 삽입
+    listEl.appendChild(frag);
+  }
   // 5. 이벤트 리스너 등록하기
 
   // 6. 템플릿을 문서에 삽입
@@ -79,11 +109,36 @@ async function drawPostList() {
 
 async function drawPostDetail(postId) {
   // 1. 템플릿 복사
+  const frag = document.importNode(templates.postDetail, true);
+
   // 2. 요소 선택
+  const titleEl = frag.querySelector('.title');
+  const authorEl = frag.querySelector('.author');
+  const bodyEl = frag.querySelector('.body');
+  const backButtonEl = frag.querySelector('.back');
+
   // 3. 필요한 데이터 불러오기
+  const { data : {title, body, user} } = await api.get('/posts/' + postId +'?_expand=user');
+  // const res = await api.get('/posts/' + postId + '?_expand=user');
+  // const data = res.data;
+  // const title = data.title;
+  // const body = data.body;
+  // const user = data.user;
+
   // 4. 내용 채우기
+  titleEl.textContent = title;
+  authorEl.textContent = user.username;
+  bodyEl.textContent = body;
+
   // 5. 이벤트 리스너 등록하기
+  // 뒤로가기 버튼 이벤트 리스너
+  backButtonEl.addEventListener('click', (e) => {
+    drawPostList();
+  });
+
   // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
 }
 
 async function drawNewPostForm() {
