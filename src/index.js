@@ -157,6 +157,12 @@ async function drawPostDetail(postId) {
   // const body = data.body;
   // const user = data.user;
   // const comments = data.comments;
+  const res = await api.get('/posts/'+postId+'/comments');
+  const resdata = res.data;
+
+
+  const {data : whoAmI} = await api.get('/me');
+  console.log(whoAmI)
 
   // 각 댓글 작성자를 가져오기 위한 데이터 요청
   const params = new URLSearchParams();
@@ -174,7 +180,7 @@ async function drawPostDetail(postId) {
   bodyEl.textContent = body;
 
   // 댓글 표시
-  for (const commentItem of comments){
+  for (const commentItem of resdata){
     // 1. 템플릿 복사
     const frag = document.importNode(templates.commentItem, true);
 
@@ -190,8 +196,11 @@ async function drawPostDetail(postId) {
 
     // userList 에서 현재 코멘트아이템의 유저아이디와 똑같은 객체를 찾아서 user에 저장
     const user = userList.find(item => item.id === commentItem.userId);
-    authorEl.textContent = user.username;
-
+    // authorEl.textContent = user.username;
+    console.log(commentItem.userId)
+    if(commentItem.userId === whoAmI.id){
+      deleteEl.classList.remove('hidden');
+    }
     // 5. 이벤트 리스너 등록하기
     // 6. 템플릿을 문서에 삽입
     // commentListEl.textContent = '';
