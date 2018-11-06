@@ -118,7 +118,11 @@ async function drawPostDetail(postId) {
   const backButtonEl = frag.querySelector('.back');
 
   // 3. 필요한 데이터 불러오기
-  const { data : {title, body, user} } = await api.get('/posts/' + postId +'?_expand=user');
+  const { data : {title, body, user} } = await api.get('/posts/' + postId, {
+    params : {
+      _expand : 'user',
+    }
+  });
   // const res = await api.get('/posts/' + postId + '?_expand=user');
   // const data = res.data;
   // const title = data.title;
