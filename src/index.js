@@ -47,6 +47,7 @@ async function drawLoginForm() {
   // 4. 내용 채우기 - 필요없음
   // 5. 이벤트 리스너 등록하기
   formEl.addEventListener('submit', async e => {
+    document.body.classList.add('loading');
     e.preventDefault()
     const username = e.target.elements.username.value
     const password = e.target.elements.password.value
@@ -57,7 +58,8 @@ async function drawLoginForm() {
     })
 
     localStorage.setItem('token', res.data.token)
-    drawPostList()
+    await drawPostList();
+    document.body.classList.remove('loading');
   })
 
   // 6. 템플릿을 문서에 삽입
