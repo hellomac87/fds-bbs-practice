@@ -28,6 +28,15 @@ const templates = {
 
 const rootEl = document.querySelector('.root')
 
+
+const loadingView = {
+  start : () => {
+    document.body.classList.add('loading');
+  },
+  end : () => {
+    document.body.classList.remove('loading');
+  }
+}
 // 페이지 그리는 함수 작성 순서
 // 1. 템플릿 복사
 // 2. 요소 선택
@@ -47,7 +56,7 @@ async function drawLoginForm() {
   // 4. 내용 채우기 - 필요없음
   // 5. 이벤트 리스너 등록하기
   formEl.addEventListener('submit', async e => {
-    document.body.classList.add('loading');
+    loadingView.start();
     e.preventDefault()
     const username = e.target.elements.username.value
     const password = e.target.elements.password.value
@@ -59,7 +68,7 @@ async function drawLoginForm() {
 
     localStorage.setItem('token', res.data.token)
     await drawPostList();
-    document.body.classList.remove('loading');
+    loadingView.end();
   })
 
   // 6. 템플릿을 문서에 삽입
@@ -99,9 +108,9 @@ async function drawPostList() {
 
     // 5. 이벤트 리스너 등록하기
     titleEl.addEventListener('click', async (e) => {
-      document.body.classList.add('loading');
+      loadingView.start();
       await drawPostDetail(post.id);
-      document.body.classList.remove('loading');
+      loadingView.end();
     });
     // 6. 템플릿을 문서에 삽입
     listEl.appendChild(frag);
