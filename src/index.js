@@ -98,8 +98,10 @@ async function drawPostList() {
     authorEl.textContent = post.user.username;
 
     // 5. 이벤트 리스너 등록하기
-    titleEl.addEventListener('click', (e) => {
-      drawPostDetail(post.id);
+    titleEl.addEventListener('click', async (e) => {
+      document.body.classList.add('loading');
+      await drawPostDetail(post.id);
+      document.body.classList.remove('loading');
     });
     // 6. 템플릿을 문서에 삽입
     listEl.appendChild(frag);
