@@ -132,6 +132,16 @@ async function drawPostDetail(postId) {
   // const user = data.user;
   // const comments = data.comments;
 
+  // 각 댓글 작성자를 가져오기 위한 데이터 요청
+  const params = new URLSearchParams();
+  comments.forEach(comment => {
+    params.append('id',comment.userId)
+  });
+
+  const {data: userList} = await api.get('/users', {
+    params
+  });
+
   // 4. 내용 채우기
   titleEl.textContent = title;
   authorEl.textContent = user.username;
@@ -146,11 +156,16 @@ async function drawPostDetail(postId) {
     const authorEl = frag.querySelector('.author');
     const bodyEl = frag.querySelector('.body');
     const deleteEl = frag.querySelector('.delete');
+
     // 3. 필요한 데이터 불러오기
 
     // 4. 내용 채우기
-    // authorEl.textContent
     bodyEl.textContent = commentItem.body;
+
+    // userList 에서 현재 코멘트아이템의 유저아이디와 똑같은 객체를 찾아서 user에 저장
+    const user = userList.find(item => item.id === commentItem.userId);
+    authorEl.textContent = user.username;
+
     // 5. 이벤트 리스너 등록하기
     // 6. 템플릿을 문서에 삽입
     // commentListEl.textContent = '';
