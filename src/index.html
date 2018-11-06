@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>중간 프로젝트 템플릿</title>
+  <link rel="stylesheet" href="./index.scss">
+</head>
+<body>
+  <!-- 로그인 폼 -->
+  <template id="login-form">
+    <form class="login-form">
+      <input type="text" name="username">
+      <input type="password" name="password">
+      <button>로그인</button>
+    </form>
+  </template>
+
+  <!-- 게시물 목록 -->
+  <template id="post-list">
+    <div class="buttons">
+      <button class="create">새 글</button>
+      <button class="logout">로그아웃</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <td>번호</td>
+          <td>제목</td>
+          <td>작성자</td>
+        </tr>
+      </thead>
+      <tbody class="post-list">
+      </tbody>
+    </table>
+  </template>
+
+  <!-- 게시물 목록 내부의 항목 -->
+  <template id="post-item">
+    <tr class="post-item">
+      <td class="id"></td>
+      <td class="title"></td>
+      <td class="author"></td>
+    </tr>
+  </template>
+
+  <!-- 게시물 등록/수정 폼 -->
+  <template id="post-form">
+    <form class="post-form">
+      <div class="field">
+        <label>제목</label>
+        <input class="title" type="text" name="title">
+      </div>
+      <div class="field">
+        <label>내용</label>
+        <textarea class="body" name="body" cols="30" rows="10"></textarea>
+      </div>
+      <button>전송</button>
+      <button class="back">뒤로</button>
+    </form>
+  </template>
+
+  <!-- 게시물 세부내용 -->
+  <template id="post-detail">
+    <div class="buttons">
+      <button class="delete">삭제</button>
+      <button class="update">수정</button>
+      <button class="back">뒤로</button>
+    </div>
+    <div class="post-detail">
+      <h2 class="title"></h2>
+      <p class="author-wrap">작성자: <span class="author"></span></p>
+      <p class="body"></p>
+    </div>
+    <form class="comment-form">
+      <input class="body" type="text" name="body">
+      <button>전송</button>
+    </form>
+    <ul class="comment-list"></ul>
+  </template>
+
+  <template id="comment-item">
+    <li class="comment-item">
+      <span class="author"></span>:
+      <span class="body"></span>
+      <button class="delete hidden">삭제</button>
+    </li>
+  </template>
+
+  <div class="root"></div>
+  <script src="./index.js"></script>
+</body>
+</html>
