@@ -72,6 +72,7 @@ async function drawPostList() {
   // 2. 요소 선택
   const listEl = frag.querySelector('.post-list');
   const creatPostButtonEl = frag.querySelector('.create');
+  const logoutEl = frag.querySelector('.logout');
 
   // 3. 필요한 데이터 불러오기
   const {data: postList} = await api.get('/posts/?_expand=user');
@@ -105,6 +106,12 @@ async function drawPostList() {
   creatPostButtonEl.addEventListener('click', (e) => {
     drawNewPostForm();
   });
+  // 로그아웃 버튼 이벤트 리스너
+  logoutEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    drawLoginForm();
+  })
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
