@@ -7,7 +7,6 @@ const api = axios.create({
   // 이 컴퓨터에서만 사용할 환경변수를 설정하기 위해서 .env 파일을 편집하면 된다.
   baseURL: process.env.API_URL.toString()
 });
-console.log(process.env.API_URL);
 
 api.interceptors.request.use(function (config) {
   const token = localStorage.getItem('token')
@@ -72,12 +71,14 @@ async function drawPostList() {
 
   // 2. 요소 선택
   const listEl = frag.querySelector('.post-list');
+  const creatPostButtonEl = frag.querySelector('.create');
+
   // 3. 필요한 데이터 불러오기
   const {data: postList} = await api.get('/posts/?_expand=user');
   // 응답 객체의 data 변수를 postList 변수에 저장
   // const res = await api.get('/posts/?_expand=user');
   // const post = res.data
-  console.log(postList);
+
   // 4. 내용 채우기
   for(const post of postList){
     // 1. 템플릿 복사
@@ -101,7 +102,9 @@ async function drawPostList() {
     listEl.appendChild(frag);
   }
   // 5. 이벤트 리스너 등록하기
-
+  creatPostButtonEl.addEventListener('click', (e) => {
+    drawNewPostForm();
+  });
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
@@ -197,11 +200,35 @@ async function drawPostDetail(postId) {
 
 async function drawNewPostForm() {
   // 1. 템플릿 복사
+  const frag = document.importNode(templates.postForm, true);
   // 2. 요소 선택
+  const postFormEl = frag.querySelector('.post-form');
+  const backEl = frag.querySelector('.back');
+
   // 3. 필요한 데이터 불러오기
   // 4. 내용 채우기
   // 5. 이벤트 리스너 등록하기
+  // 글 작성 폼 이벤트 리스너
+  postFormEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = e.target.elements.title.value;
+    const body = e.target.elements.body.value;
+
+    await api.post('/posts',{
+      title,
+      body
+    });
+
+    drawPostList();
+  });
+  // 뒤로가기 버튼 이벤트 리스너
+  backEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    drawPostList();
+  });
   // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
 }
 
 async function drawEditPostForm(postId) {
